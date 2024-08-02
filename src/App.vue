@@ -1,20 +1,25 @@
 <template>
   <div id="app">
-    <ProductList />
+    <Navbar />
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 
 <script>
-import ProductList from './components/ProductList.vue';
+import Navbar from './Routes/+Navbar.vue'; // Adjust path as necessary
 
 export default {
-  name: 'App',
   components: {
-    ProductList,
+    Navbar,
   },
 };
 </script>
 
 <style>
-@import './style.css';
+/* Styles for the App component */
+main {
+  padding: 20px;
+}
 </style>

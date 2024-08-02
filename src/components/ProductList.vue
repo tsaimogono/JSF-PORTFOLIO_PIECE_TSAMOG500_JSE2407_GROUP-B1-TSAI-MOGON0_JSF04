@@ -120,5 +120,4 @@
   
   <style scoped>
   /* Tailwind CSS utility classes are used, so no additional CSS is needed */
-  </style>
-  
+  </style>  
