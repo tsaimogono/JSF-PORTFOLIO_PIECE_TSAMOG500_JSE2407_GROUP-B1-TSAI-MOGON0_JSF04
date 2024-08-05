@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Navbar from './Routes/+Navbar.vue'; // Adjust path as necessary
+import Navbar from './components/Navbar.vue'; // Adjust path as necessary
 
 export default {
   components: {
