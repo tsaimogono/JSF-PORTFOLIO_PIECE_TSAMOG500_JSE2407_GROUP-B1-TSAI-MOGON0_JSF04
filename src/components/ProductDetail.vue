@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center flex-col p-5">
+    <div class="flex flex-col items-center p-5">
       <div v-if="loading" class="text-center text-lg font-bold">Loading...</div>
       <div v-else-if="error" class="text-center text-red-600">Error: {{ error }}</div>
       <div v-else-if="product" class="text-center border border-gray-300 p-4 m-4 rounded-lg max-w-lg w-full">
@@ -47,6 +47,6 @@
   </script>
   
   <style scoped>
-  /* Tailwind CSS utility classes are used, so no additional CSS is needed */
+  /* No additional CSS needed, using Tailwind CSS */
   </style>
   

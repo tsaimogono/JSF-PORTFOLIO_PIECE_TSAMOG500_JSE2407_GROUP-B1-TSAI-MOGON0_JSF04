@@ -21,21 +21,38 @@
           <button @click="resetFilters" class="ml-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">Reset Filters</button>
         </div>
     
-        <div class="product-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div class="product-card border border-gray-200 p-4 text-center bg-white shadow-md rounded hover:shadow-lg transition-transform transform hover:-translate-y-1" v-for="product in filteredProducts" :key="product.id">
-            <img :src="product.image" alt="Product Image" class="w-full h-48 object-contain mb-4" />
-            <h2 class="text-xl font-semibold mb-2">{{ product.title }}</h2>
-            <p class="text-gray-700 mb-2">{{ product.price | currency }}</p>
-            <p class="text-gray-500 mb-4">{{ product.category }}</p>
-            <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
-              <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">View Details</button>
-            </router-link>
-            <button @click="addToCart(product)" class="mt-2 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition-colors">Add to Cart</button>
-          </div>
+  <div class="bg-gray-100 p-6">
+    <div class="container mx-auto">
+      <div class="product-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div
+          v-for="product in filteredProducts"
+          :key="product.id"
+          class="product-card border border-gray-200 p-4 text-center bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow transform hover:-translate-y-2"
+        >
+          <img
+          img :src="product.image" alt="Product Image" class="w-full h-[15rem] object-contain mb-4" 
+          />
+          <h2 class="text-lg font-semibold mb-2">{{ product.title }}</h2>
+          <p class="text-gray-800 mb-2 font-bold">${{ product.price.toFixed(2) }}</p>
+          <p class="text-gray-500 mb-4 text-sm">{{ product.category }}</p>
+          <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
+            <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+              View Details
+            </button>
+          </router-link>
+          <button
+            @click="addToCart(product)"
+            class="mt-2 mr-2 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-3 focus:ring-green-500 focus:ring-opacity-50"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+ </div>
+</div>
+ </template>
   
   <script>
   import axios from 'axios';

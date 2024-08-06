@@ -10,16 +10,20 @@ import axios from 'axios';
  * DataProducts().then(products => console.log(products));
  */
 export async function DataProducts() {
-  const response = await axios.get('https://fakestoreapi.com/products');
-  return response.data.map((product) => ({
-    id: product.id,
-    title: product.title,
-    price: product.price,
-    description: product.description,
-    category: product.category,
-    image: product.image,
-    rating: product.rating,
-  }));
+  try {
+    const response = await axios.get('https://fakestoreapi.com/products');
+    return response.data.map((product) => ({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      image: product.image,
+      rating: product.rating,
+    }));
+  } catch (error) {
+    throw new Error(`Failed to fetch products: ${error.message}`);
+  }
 }
 
 /**
@@ -36,6 +40,6 @@ export async function getCategories() {
     const response = await axios.get('https://fakestoreapi.com/products/categories');
     return { response: response.data };
   } catch (error) {
-    return { error: error };
+    throw new Error(`Failed to fetch categories: ${error.message}`);
   }
 }
