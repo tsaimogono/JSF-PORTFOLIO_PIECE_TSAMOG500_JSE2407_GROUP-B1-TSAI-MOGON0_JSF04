@@ -1,6 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'; // Corrected import path
-import Products from './components/ProductList.vue'; // Ensure this path is correct
-import ProductDetail from './components/ProductDetail.vue'; // Ensure this path is correct
+import { createRouter, createWebHistory } from 'vue-router';
+import Products from './components/ProductList.vue'; // Use relative path if in the same directory
+import ProductDetail from './components/ProductDetail.vue'; // Use relative path if in the same directory
+import Login from './components/Login.vue'; // Use relative path if in the same directory
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/product/:id',
     name: 'ProductDetail',
     component: ProductDetail,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
 ];
 
