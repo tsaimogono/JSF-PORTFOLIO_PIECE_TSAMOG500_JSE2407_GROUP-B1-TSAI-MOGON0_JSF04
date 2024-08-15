@@ -1,65 +1,100 @@
 <template>
-    <div class="max-w-4xl mx-auto p-4">
-      <h2 class="text-2xl font-bold mb-4">My Wishlist</h2>
-      <div v-if="wishlist.length === 0" class="text-gray-500">Your wishlist is empty.</div>
+    <div>
+      <div v-if="loading" class="text-center text-lg font-bold">Loading...</div>
       <div v-else>
-        <ul class="space-y-4">
-          <li v-for="item in wishlist" :key="item.id" class="flex items-center justify-between p-4 border border-gray-300 rounded">
+        <div v-if="wishlist.length === 0" class="text-center text-lg font-bold">Your wishlist is empty</div>
+  
+        <div v-else>
+          <div v-for="item in wishlist" :key="item.id" class="flex items-center justify-between border-b py-4">
             <div class="flex items-center">
               <img :src="item.image" alt="Product Image" class="w-16 h-16 object-cover mr-4" />
               <div>
-                <h3 class="text-lg font-semibold">{{ item.name }}</h3>
-                <p class="text-gray-700">${{ item.price }}</p>
+                <h3 class="font-semibold">{{ item.title }}</h3>
+                <p class="text-gray-600">${{ item.price.toFixed(2) }}</p>
               </div>
             </div>
-            <div class="flex space-x-2">
-              <button @click="removeFromWishlist(item.id)" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">Remove</button>
-              <button @click="addToCart(item)" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">Add to Cart</button>
+            <div class="flex items-center">
+              <button @click="addToCart(item)" class="mr-4 text-green-600 hover:underline">Add to Cart</button>
+              <button @click="removeFromWishlist(item)" class="text-red-600 hover:underline">Remove</button>
             </div>
-          </li>
-        </ul>
-        <button @click="clearWishlist" class="mt-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">Clear All</button>
+          </div>
+        </div>
       </div>
     </div>
   </template>
   
   <script>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { wishlist, cart } from '../stores';
+  import { ref, onMounted } from 'vue';
+  import jwtDecode from 'jwt-decode';
   
   export default {
     setup() {
-      const router = useRouter();
+      const wishlist = ref([]);
+      const loading = ref(true);
   
-      const removeFromWishlist = (id) => {
-        const updatedWishlist = wishlist.value.filter(item => item.id !== id);
-        wishlist.value = updatedWishlist;
-        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+      const getWishlistFromLocalStorage = () => {
+        const wishlistData = localStorage.getItem('wishlist');
+        if (wishlistData) {
+          const { userId, items } = JSON.parse(wishlistData);
+          // Ensure the wishlist is for the logged-in user
+          if (userId === getCurrentUserId()) {
+            wishlist.value = items;
+          }
+        }
       };
   
-      const addToCart = (item) => {
-        cart.value.push(item);
-        localStorage.setItem('cart', JSON.stringify(cart.value));
+      const getCurrentUserId = () => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          return decodedToken.userId;
+        }
+        return null;
       };
   
-      const clearWishlist = () => {
-        wishlist.value = [];
-        localStorage.setItem('wishlist', JSON.stringify([]));
+      const updateLocalStorage = () => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+          const userId = getCurrentUserId();
+          if (userId) {
+            localStorage.setItem('wishlist', JSON.stringify({ userId, items: wishlist.value }));
+          }
+        }
       };
+  
+      const addToCart = (product) => {
+        const cartData = localStorage.getItem('cart');
+        const cartItems = cartData ? JSON.parse(cartData).items : [];
+        const existingItem = cartItems.find(item => item.id === product.id);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cartItems.push({ ...product, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify({ userId: getCurrentUserId(), items: cartItems }));
+      };
+  
+      const removeFromWishlist = (item) => {
+        wishlist.value = wishlist.value.filter(wishlistItem => wishlistItem.id !== item.id);
+        updateLocalStorage();
+      };
+  
+      onMounted(() => {
+        getWishlistFromLocalStorage();
+        loading.value = false;
+      });
   
       return {
         wishlist,
-        cart,
-        removeFromWishlist,
+        loading,
         addToCart,
-        clearWishlist,
+        removeFromWishlist,
       };
     },
   };
   </script>
   
   <style scoped>
-  /* Add custom styles if needed */
+  /* Custom styles if needed */
   </style>
   

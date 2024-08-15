@@ -1,5 +1,5 @@
-
 import { ref, computed } from 'vue';
+import jwtDecode from 'jwt-decode';
 
 /**
  * @module stores
@@ -39,3 +39,99 @@ export const isLoggedIn = ref(false);
  * @constant {Ref<Array>} filteredProducts - The filteredProducts store which holds an array of filtered products.
  */
 export const filteredProducts = ref([]);
+
+// Utility functions to get the current user ID from JWT
+const getCurrentUserId = () => {
+  const token = localStorage.getItem('jwt');
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    return decodedToken.userId;
+  }
+  return null;
+};
+
+// Synchronize cart with local storage
+const updateCartInLocalStorage = () => {
+  const userId = getCurrentUserId();
+  if (userId) {
+    localStorage.setItem('cart', JSON.stringify({ userId, items: cart.value }));
+  }
+};
+
+// Synchronize wishlist with local storage
+const updateWishlistInLocalStorage = () => {
+  const userId = getCurrentUserId();
+  if (userId) {
+    localStorage.setItem('wishlist', JSON.stringify({ userId, items: wishlist.value }));
+  }
+};
+
+// Load cart and wishlist from local storage
+const loadCartAndWishlistFromLocalStorage = () => {
+  const cartData = localStorage.getItem('cart');
+  if (cartData) {
+    const { userId, items } = JSON.parse(cartData);
+    if (userId === getCurrentUserId()) {
+      cart.value = items;
+    }
+  }
+
+  const wishlistData = localStorage.getItem('wishlist');
+  if (wishlistData) {
+    const { userId, items } = JSON.parse(wishlistData);
+    if (userId === getCurrentUserId()) {
+      wishlist.value = items;
+    }
+  }
+};
+
+// Actions to modify cart
+export const addToCart = (product) => {
+  const existingItem = cart.value.find(item => item.id === product.id);
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.value.push({ ...product, quantity: 1 });
+  }
+  updateCartInLocalStorage();
+};
+
+export const removeFromCart = (productId) => {
+  cart.value = cart.value.filter(item => item.id !== productId);
+  updateCartInLocalStorage();
+};
+
+export const updateCartQuantity = (productId, quantity) => {
+  const item = cart.value.find(item => item.id === productId);
+  if (item) {
+    item.quantity = quantity;
+    updateCartInLocalStorage();
+  }
+};
+
+export const clearCart = () => {
+  cart.value = [];
+  updateCartInLocalStorage();
+};
+
+// Actions to modify wishlist
+export const addToWishlist = (product) => {
+  if (!wishlist.value.find(item => item.id === product.id)) {
+    wishlist.value.push(product);
+    updateWishlistInLocalStorage();
+  }
+};
+
+export const removeFromWishlist = (productId) => {
+  wishlist.value = wishlist.value.filter(item => item.id !== productId);
+  updateWishlistInLocalStorage();
+};
+
+// Load data on initialization
+loadCartAndWishlistFromLocalStorage();
+
+// Computed properties
+export const cartCount = computed(() => cart.value.length);
+export const totalCartCost = computed(() => {
+  return cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+});
