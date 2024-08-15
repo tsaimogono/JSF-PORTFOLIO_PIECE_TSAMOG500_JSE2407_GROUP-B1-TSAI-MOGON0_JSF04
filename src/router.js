@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Products from './components/ProductList.vue'; // Use relative path if in the same directory
 import ProductDetail from './components/ProductDetail.vue'; // Use relative path if in the same directory
 import Login from './components/Login.vue'; // Use relative path if in the same directory
+import Wishlist from './components/wishlist.vue'; // Add import for Wishlist component
+// import Cart from './components/Cart.vue';
 
 const routes = [
   {
@@ -19,6 +21,16 @@ const routes = [
     name: 'Login',
     component: Login,
   },
+  {
+    path: '/wishlist',
+    name: 'Wishlist',
+    component: Wishlist, 
+  },
+  // {
+  //   path: '/cart',
+  //   name: 'Cart',
+  //   component: Cart,
+  // },
 ];
 
 const router = createRouter({
