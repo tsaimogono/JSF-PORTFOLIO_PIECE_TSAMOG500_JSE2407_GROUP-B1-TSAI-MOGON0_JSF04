@@ -25,7 +25,7 @@
   
   <script>
   import { ref, onMounted } from 'vue';
-  import jwtDecode from 'jwt-decode';
+  import {jwtDecode} from 'jwt-decode';
   
   export default {
     setup() {

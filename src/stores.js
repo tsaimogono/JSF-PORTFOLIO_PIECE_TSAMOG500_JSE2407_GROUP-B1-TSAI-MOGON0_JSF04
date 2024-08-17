@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 /**
  * @module stores
@@ -8,6 +8,7 @@ import jwtDecode from 'jwt-decode';
  * Stores include:
  * - `cart`: A ref for managing the user's shopping cart items.
  * - `wishlist`: A ref for managing the user's wishlist items.
+ * - `comparisonList`: A ref for managing the user's comparison list items.
  * - `isLoggedIn`: A ref for tracking the user's login state.
  * - `filteredProducts`: A ref for managing the list of products after filtering.
  */
@@ -25,6 +26,13 @@ export const cart = ref([]);
  * @constant {Ref<Array>} wishlist - The wishlist store which holds an array of wishlist items.
  */
 export const wishlist = ref([]);
+
+/**
+ * A reactive state for managing the items in the user's comparison list.
+ * 
+ * @constant {Ref<Array>} comparisonList - The comparisonList store which holds an array of comparison items.
+ */
+export const comparisonList = ref([]); // Added for comparison list
 
 /**
  * A reactive state for tracking the user's login state.
@@ -50,7 +58,7 @@ const getCurrentUserId = () => {
   return null;
 };
 
-// Synchronize cart with local storage
+// Synchronize cart, wishlist, and comparison list with local storage
 const updateCartInLocalStorage = () => {
   const userId = getCurrentUserId();
   if (userId) {
@@ -58,7 +66,6 @@ const updateCartInLocalStorage = () => {
   }
 };
 
-// Synchronize wishlist with local storage
 const updateWishlistInLocalStorage = () => {
   const userId = getCurrentUserId();
   if (userId) {
@@ -66,7 +73,14 @@ const updateWishlistInLocalStorage = () => {
   }
 };
 
-// Load cart and wishlist from local storage
+const updateComparisonListInLocalStorage = () => {
+  const userId = getCurrentUserId();
+  if (userId) {
+    localStorage.setItem('comparisonList', JSON.stringify({ userId, items: comparisonList.value }));
+  }
+};
+
+// Load cart, wishlist, and comparison list from local storage
 const loadCartAndWishlistFromLocalStorage = () => {
   const cartData = localStorage.getItem('cart');
   if (cartData) {
@@ -81,6 +95,14 @@ const loadCartAndWishlistFromLocalStorage = () => {
     const { userId, items } = JSON.parse(wishlistData);
     if (userId === getCurrentUserId()) {
       wishlist.value = items;
+    }
+  }
+
+  const comparisonListData = localStorage.getItem('comparisonList');
+  if (comparisonListData) {
+    const { userId, items } = JSON.parse(comparisonListData);
+    if (userId === getCurrentUserId()) {
+      comparisonList.value = items;
     }
   }
 };
@@ -127,6 +149,28 @@ export const removeFromWishlist = (productId) => {
   updateWishlistInLocalStorage();
 };
 
+// Actions to modify comparison list
+export const addToComparisonList = (product) => {
+  if (comparisonList.value.length >= 3) {
+    alert('You can only compare up to 3 items.'); // Limit to 3 items for comparison
+    return;
+  }
+  if (!comparisonList.value.find(item => item.id === product.id)) {
+    comparisonList.value.push(product);
+    updateComparisonListInLocalStorage();
+  }
+};
+
+export const removeFromComparisonList = (productId) => {
+  comparisonList.value = comparisonList.value.filter(item => item.id !== productId);
+  updateComparisonListInLocalStorage();
+};
+
+export const clearComparisonList = () => {
+  comparisonList.value = [];
+  updateComparisonListInLocalStorage();
+};
+
 // Load data on initialization
 loadCartAndWishlistFromLocalStorage();
 
@@ -135,3 +179,5 @@ export const cartCount = computed(() => cart.value.length);
 export const totalCartCost = computed(() => {
   return cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
 });
+
+export const comparisonListCount = computed(() => comparisonList.value.length); // Computed for comparison list

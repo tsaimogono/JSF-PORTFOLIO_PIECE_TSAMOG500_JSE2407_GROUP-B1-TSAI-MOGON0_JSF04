@@ -8,8 +8,8 @@
       </div>
       <div class="hidden md:flex space-x-4">
         <router-link to="/">Products</router-link>
-        <router-link to="/wishlist">Wishlist ({{ wishlist.length }})</router-link>
-        <router-link to="/cart">Cart ({{ cart.length }})</router-link>
+        <router-link to="/wishlist">Wishlist ({{ wishlistCount }})</router-link>
+        <router-link to="/cart">Cart ({{ cartCount }})</router-link>
         <template v-if="isLoggedIn">
           <button @click="handleLogout">Logout</button>
         </template>
@@ -25,8 +25,8 @@
     </div>
     <div v-if="isMenuOpen" class="md:hidden flex flex-col bg-gray-800 p-4 space-y-2">
       <router-link to="/">Products</router-link>
-      <router-link to="/wishlist">Wishlist ({{ wishlist.length }})</router-link>
-      <router-link to="/cart">Cart ({{ cart.length }})</router-link>
+      <router-link to="/wishlist">Wishlist ({{ wishlistCount }})</router-link>
+      <router-link to="/cart">Cart ({{ cartCount }})</router-link>
       <template v-if="isLoggedIn">
         <button @click="handleLogout">Logout</button>
       </template>
@@ -38,49 +38,50 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { cart, wishlist, isLoggedIn } from '../stores'; 
+import { useCartStore } from '../cartStore'; // Adjust path as needed
 
 export default {
   setup() {
     const isMenuOpen = ref(false);
+    const cartStore = useCartStore();
     const router = useRouter();
 
-    // Watch the `isLoggedIn` state to handle any necessary actions
-    watch(isLoggedIn, (newValue) => {
-      if (!newValue) {
-        // Optionally redirect or handle additional cleanup when logged out
-        router.push('/login');
-      }
-    });
+    // Computed properties to get cart count
+    const cartCount = computed(() => cartStore.cartCount);
 
+    // Toggle menu visibility
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
     };
 
-    const handleResize = () => {
-      if (window.innerWidth > 768 && isMenuOpen.value) {
-        isMenuOpen.value = false;
-      }
-    };
-
+    // Handle user logout
     const handleLogout = () => {
-      // Clear authentication data
       localStorage.removeItem('jwt');
-      isLoggedIn.value = false;
-      // Redirect to the login page
+      localStorage.removeItem('cart');
+      localStorage.removeItem('wishlist');
+      cartStore.items = [];
       router.push('/');
     };
 
-    window.addEventListener('resize', handleResize);
+    // Update counts on component mount
+    onMounted(() => {
+      cartStore.loadCart();
+
+      // Optionally listen for localStorage changes if you want
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'cart') {
+          cartStore.loadCart();
+        }
+      });
+    });
 
     return {
       isMenuOpen,
       toggleMenu,
-      cart,
-      wishlist,
-      isLoggedIn,
+      cartCount,
+      isLoggedIn: ref(false), // Replace with actual login logic
       handleLogout,
     };
   },
