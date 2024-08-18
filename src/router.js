@@ -3,10 +3,9 @@ import Products from './components/ProductList.vue'; // Use relative path if in 
 import ProductDetail from './components/ProductDetail.vue'; // Use relative path if in the same directory
 import Login from './components/Login.vue'; // Use relative path if in the same directory
 import Wishlist from './components/wishlist.vue'; // Add import for Wishlist component
- import Cart from './components/cart.vue';
-import Comparison from './components/Comparison.vue'; // Add import for Comparison component
+import Cart from './components/cart.vue'; // Add import for Cart component
+import ComparisonList from './components/ComparisonList.vue'; // Import the correct component
 import { isLoggedIn } from './stores'; // Import isLoggedIn from your store
-
 
 const routes = [
   {
@@ -36,8 +35,8 @@ const routes = [
   },
   {
     path: '/comparison',
-    name: 'Comparison',
-    component: Comparison,
+    name: 'ComparisonList',
+    component: ComparisonList, // Use ComparisonList component
     beforeEnter: (to, from, next) => {
       if (isLoggedIn.value) {
         next();

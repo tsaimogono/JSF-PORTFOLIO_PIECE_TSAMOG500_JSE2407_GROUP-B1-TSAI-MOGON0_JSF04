@@ -1,3 +1,4 @@
+
 <template>
     <div v-if="isLoggedIn">
       <h2 class="text-center text-lg font-bold mb-4">Comparison List</h2>
@@ -47,26 +48,30 @@
   
   <script>
   import { computed, onMounted } from 'vue';
-  import { useComparisonStore } from '@/stores/comparison';
-  import { useAuthStore } from '@/stores/auth'; // Assuming you have an auth store
+  import { comparisonList, removeFromComparisonList, clearComparisonList, isLoggedIn } from '../stores'; // Ensure correct path
   
   export default {
     setup() {
-      const comparisonStore = useComparisonStore();
-      const authStore = useAuthStore();
+      const comparisonItems = computed(() => comparisonList.value);
+      const loggedIn = computed(() => isLoggedIn.value);
   
-      const isLoggedIn = computed(() => authStore.isLoggedIn);
-      const comparisonItems = computed(() => comparisonStore.items);
+      const removeFromComparison = (productId) => {
+        removeFromComparisonList(productId);
+      };
+  
+      const clearComparison = () => {
+        clearComparisonList();
+      };
   
       onMounted(() => {
-        comparisonStore.loadComparison();
+        // Optionally, you can load or initialize the comparison list here if needed
       });
   
       return {
-        isLoggedIn,
         comparisonItems,
-        removeFromComparison: comparisonStore.removeFromComparison,
-        clearComparison: comparisonStore.clearComparison,
+        isLoggedIn: loggedIn,
+        removeFromComparison,
+        clearComparison,
       };
     },
   };

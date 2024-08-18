@@ -65,7 +65,8 @@
 
 <script>
 import axios from 'axios';
-import { useCartStore, useComparisonStore } from '../stores'; // Updated path for the store
+import { useCartStore } from '../cartStore'; // Adjusted path for cart store
+import { addToComparisonList } from '../stores'; // Adjusted path for comparison list functions
 
 export default {
   data() {
@@ -134,8 +135,7 @@ export default {
       cartStore.addToCart(product);
     },
     addToComparison(product) {
-      const comparisonStore = useComparisonStore();
-      comparisonStore.addToComparison(product);
+      addToComparisonList(product); // Use the function from stores.js
     },
   },
   mounted() {
