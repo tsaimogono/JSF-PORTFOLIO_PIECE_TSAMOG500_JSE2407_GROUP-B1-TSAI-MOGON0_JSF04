@@ -1,4 +1,3 @@
-
 <template>
     <div v-if="isLoggedIn">
       <h2 class="text-center text-lg font-bold mb-4">Comparison List</h2>
@@ -6,14 +5,17 @@
       <div v-if="comparisonItems.length === 0" class="text-center">
         Your comparison list is empty.
       </div>
-  
       <div v-else>
-        <button @click="clearComparison" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 mb-4">Clear Comparison</button>
+        <button @click="clearComparison" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 mb-4">
+          Clear Comparison
+        </button>
   
-        <table class="w-full border">
+        <table class="w-full border overflow-auto">
           <thead>
             <tr>
-              <th v-for="(item, index) in comparisonItems" :key="index" class="border px-2 py-1">Product {{ index + 1 }}</th>
+              <th v-for="(item, index) in comparisonItems" :key="index" class="border px-2 py-1">
+                Product {{ index + 1 }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -47,8 +49,14 @@
   </template>
   
   <script>
-  import { computed, onMounted } from 'vue';
-  import { comparisonList, removeFromComparisonList, clearComparisonList, isLoggedIn } from '../stores'; // Ensure correct path
+  import { computed } from 'vue';
+  import {
+    comparisonList,
+    removeFromComparisonList,
+    clearComparisonList,
+    isLoggedIn,
+    maxComparisonItems,
+  } from '../stores'; // Ensure correct path
   
   export default {
     setup() {
@@ -63,21 +71,26 @@
         clearComparisonList();
       };
   
-      onMounted(() => {
-        // Optionally, you can load or initialize the comparison list here if needed
-      });
-  
       return {
         comparisonItems,
         isLoggedIn: loggedIn,
         removeFromComparison,
         clearComparison,
+        maxComparisonItems,
       };
     },
   };
   </script>
   
   <style scoped>
-  /* Add custom styles if necessary */
+  /* Ensure the table is responsive */
+  table {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  
+  td img {
+    max-width: 100%;
+  }
   </style>
   

@@ -112,8 +112,8 @@ export const removeFromWishlist = (productId) => {
 
 // Actions to modify comparison list
 export const addToComparisonList = (product) => {
-  if (comparisonList.value.length >= 3) {
-    alert('You can only compare up to 3 items.'); // Limit to 3 items for comparison
+  if (comparisonList.value.length >= 2) {
+    alert('You can only compare up to 2 items.'); // Limit to 3 items for comparison
     return;
   }
   if (!comparisonList.value.find(item => item.id === product.id)) {
