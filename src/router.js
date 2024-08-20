@@ -4,7 +4,7 @@ import ProductDetail from './components/ProductDetail.vue'; // Use relative path
 import Login from './components/Login.vue'; // Use relative path if in the same directory
 import Wishlist from './components/wishlist.vue'; // Add import for Wishlist component
 import Cart from './components/cart.vue'; // Add import for Cart component
-import ComparisonList from './components/ComparisonList.vue'; // Import the correct component
+import ComparisonList from './components/comparisonList.vue'; // Import the correct component
 import { isLoggedIn } from './stores'; // Import isLoggedIn from your store
 
 const routes = [

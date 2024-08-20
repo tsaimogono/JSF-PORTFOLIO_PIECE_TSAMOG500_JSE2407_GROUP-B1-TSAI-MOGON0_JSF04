@@ -9,6 +9,7 @@
       <div class="hidden md:flex space-x-4">
         <router-link to="/">Products</router-link>
         <router-link to="/wishlist">Wishlist ({{ wishlistCount }})</router-link>
+        <router-link to="/comparison">Comparison</router-link>
         <router-link to="/cart">Cart ({{ cartCount }})</router-link>
         <template v-if="isLoggedIn">
           <button @click="handleLogout">Logout</button>
@@ -26,6 +27,7 @@
     <div v-if="isMenuOpen" class="md:hidden flex flex-col bg-gray-800 p-4 space-y-2">
       <router-link to="/">Products</router-link>
       <router-link to="/wishlist">Wishlist ({{ wishlistCount }})</router-link>
+      <router-link to="/comparison">Comparison</router-link>
       <router-link to="/cart">Cart ({{ cartCount }})</router-link>
       <template v-if="isLoggedIn">
         <button @click="handleLogout">Logout</button>
@@ -41,12 +43,14 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../cartStore'; // Adjust path as needed
+import { useWishlistStore } from '../WishlistStore';
 
 export default {
   setup() {
     const isMenuOpen = ref(false);
     const cartStore = useCartStore();
     const router = useRouter();
+    const wishlistStore = useWishlistStore();
 
     // Computed properties to get cart count
     const cartCount = computed(() => cartStore.cartCount);
@@ -83,6 +87,7 @@ export default {
       cartCount,
       isLoggedIn: ref(false), // Replace with actual login logic
       handleLogout,
+      wishlistCount: computed(() => wishlistStore.wishlistCount),
     };
   },
 };

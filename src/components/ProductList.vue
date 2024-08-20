@@ -18,7 +18,9 @@
           <option value="high">Highest to Lowest</option>
         </select>
 
-        <button @click="resetFilters" class="ml-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">Reset Filters</button>
+        <button @click="resetFilters" class="ml-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">
+          Reset Filters
+        </button>
       </div>
 
       <div class="bg-gray-100 p-6">
@@ -34,27 +36,52 @@
               <p class="text-gray-800 mb-2 font-bold">${{ product.price.toFixed(2) }}</p>
               <p class="text-gray-500 mb-4 text-sm">{{ product.category }}</p>
               <p class="mb-4">Rating: {{ product.rating.rate }} ({{ product.rating.count }} reviews)</p>
-              
-              <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
-                <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                  View Details
+
+              <!-- Wishlist Button -->
+              <button @click="toggleWishlist(product)" class="mr-5">
+                <svg
+                  :class="isInWishlist(product) ? 'fill-red-500' : 'text-red-500'"
+                  class="h-6 w-6 hover:fill-red-500"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z"
+                    stroke="#000000"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+              <div class="flex-col gap-2">
+                <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
+                  <button
+                    class="bg-blue-600 text-white py-2 px-2 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  >
+                    View Details
+                  </button>
+                </router-link>
+
+                <button
+                  @click="addToCart(product)"
+                  class="mt-2 ml-3 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-3 focus:ring-green-500 focus:ring-opacity-50"
+                >
+                  Add to Cart
                 </button>
-              </router-link>
 
-              <button
-                @click="addToCart(product)"
-                class="mt-2 mr-2 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-3 focus:ring-green-500 focus:ring-opacity-50"
-              >
-                Add to Cart
-              </button>
-
-              <!-- Add to Compare Button -->
-              <button
-                @click="addToComparison(product)"
-                class="mt-2 bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-3 focus:ring-yellow-400 focus:ring-opacity-50"
-              >
-                Add to Compare
-              </button>
+                <!-- Add to Compare Button -->
+                <button
+                  @click="addToComparison(product)"
+                  class="mt-2 bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-3 focus:ring-yellow-400 focus:ring-opacity-50"
+                >
+                  Add to Compare
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -66,6 +93,7 @@
 <script>
 import axios from 'axios';
 import { useCartStore } from '../cartStore'; // Adjusted path for cart store
+import { useWishlistStore } from '../WishlistStore'; // Import wishlist store
 import { addToComparisonList } from '../stores'; // Adjusted path for comparison list functions
 
 export default {
@@ -134,8 +162,20 @@ export default {
       const cartStore = useCartStore();
       cartStore.addToCart(product);
     },
+    toggleWishlist(product) {
+      const wishlistStore = useWishlistStore();
+      if (this.isInWishlist(product)) {
+        wishlistStore.removeFromWishlist(product.id);
+      } else {
+        wishlistStore.addToWishlist(product);
+      }
+    },
+    isInWishlist(product) {
+      const wishlistStore = useWishlistStore();
+      return wishlistStore.items.some(item => item.id === product.id);
+    },
     addToComparison(product) {
-      addToComparisonList(product); // Use the function from stores.js
+      addToComparisonList(product); // Use the function from comparisonStore.js
     },
   },
   mounted() {

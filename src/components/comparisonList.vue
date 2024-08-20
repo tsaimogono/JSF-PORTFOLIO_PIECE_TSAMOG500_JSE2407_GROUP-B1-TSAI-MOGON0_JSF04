@@ -55,7 +55,7 @@
     removeFromComparisonList,
     clearComparisonList,
     isLoggedIn,
-    maxComparisonItems,
+    // maxComparisonItems,
   } from '../stores'; // Ensure correct path
   
   export default {
@@ -76,7 +76,7 @@
         isLoggedIn: loggedIn,
         removeFromComparison,
         clearComparison,
-        maxComparisonItems,
+        // maxComparisonItems,
       };
     },
   };

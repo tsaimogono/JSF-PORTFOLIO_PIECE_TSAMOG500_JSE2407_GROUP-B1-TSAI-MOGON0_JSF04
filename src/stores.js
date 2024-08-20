@@ -1,6 +1,6 @@
 
 import { ref, computed } from 'vue';
-import * as jwtDecode from 'jwt-decode'; // Use named import
+import  {jwtDecode} from 'jwt-decode'; // Use named import
 
 // Reactive states
 export const cart = ref([]);
