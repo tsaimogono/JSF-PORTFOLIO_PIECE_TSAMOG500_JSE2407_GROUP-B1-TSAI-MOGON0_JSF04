@@ -18,7 +18,7 @@
           <option value="high">Highest to Lowest</option>
         </select>
 
-        <button @click="resetFilters" class="ml-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">
+        <button @click="resetFilters" class="ml-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-500">
           Reset Filters
         </button>
       </div>
@@ -61,7 +61,7 @@
               <div class="flex-col gap-2">
                 <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
                   <button
-                    class="bg-blue-600 text-white py-2 px-2 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    class="bg-gray-800 text-white py-2 px-2 rounded-lg hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                   >
                     View Details
                   </button>
@@ -69,7 +69,7 @@
 
                 <button
                   @click="addToCart(product)"
-                  class="mt-2 ml-3 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-3 focus:ring-green-500 focus:ring-opacity-50"
+                  class="mt-2 ml-3 bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-300 transition-colors focus:outline-none focus:ring-3 focus:ring-green-500 focus:ring-opacity-50"
                 >
                   Add to Cart
                 </button>
@@ -77,7 +77,7 @@
                 <!-- Add to Compare Button -->
                 <button
                   @click="addToComparison(product)"
-                  class="mt-2 bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-3 focus:ring-yellow-400 focus:ring-opacity-50"
+                  class="mt-2 bg-purple-800 text-white py-2 px-4 rounded-lg hover:bg-purple-300 transition-colors focus:outline-none focus:ring-3 focus:ring-yellow-400 focus:ring-opacity-50"
                 >
                   Add to Compare
                 </button>

@@ -31,8 +31,15 @@ const routes = [
   {
     path: '/cart',
     name: 'Cart',
-    component: Cart,
+    component: Cart,   beforeEnter: (to, from, next) => {
+      if (isLoggedIn.value) {
+        next();
+      } else {
+        next({ name: 'Login' });
+      }
+    },
   },
+  
   {
     path: '/comparison',
     name: 'ComparisonList',
