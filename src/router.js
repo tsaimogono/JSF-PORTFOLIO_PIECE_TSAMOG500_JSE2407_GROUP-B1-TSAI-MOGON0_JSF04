@@ -7,6 +7,21 @@ import Cart from './components/cart.vue'; // Add import for Cart component
 import ComparisonList from './components/comparisonList.vue'; // Import the correct component
 import { isLoggedIn } from './stores'; // Import isLoggedIn from your store
 
+/**
+ * Defines and configures the Vue Router for the application.
+ * 
+ * @module router
+ */
+
+/**
+ * Routes configuration for the application.
+ * 
+ * @constant {Array} routes - List of route objects for the Vue Router.
+ * @property {string} path - The URL path for the route.
+ * @property {string} name - The name of the route.
+ * @property {Object} component - The Vue component associated with the route.
+ * @property {Function} [beforeEnter] - Navigation guard to check if the user is logged in.
+ */
 const routes = [
   {
     path: '/',
@@ -31,7 +46,8 @@ const routes = [
   {
     path: '/cart',
     name: 'Cart',
-    component: Cart,   beforeEnter: (to, from, next) => {
+    component: Cart,
+    beforeEnter: (to, from, next) => {
       if (isLoggedIn.value) {
         next();
       } else {
@@ -39,11 +55,10 @@ const routes = [
       }
     },
   },
-  
   {
     path: '/comparison',
     name: 'ComparisonList',
-    component: ComparisonList, // Use ComparisonList component
+    component: ComparisonList,
     beforeEnter: (to, from, next) => {
       if (isLoggedIn.value) {
         next();
@@ -54,6 +69,13 @@ const routes = [
   },
 ];
 
+/**
+ * Creates a new Vue Router instance with history mode.
+ * 
+ * @constant {Object} router - The Vue Router instance.
+ * @property {Function} history - The history mode used by the router.
+ * @property {Array} routes - The routes configuration for the router.
+ */
 const router = createRouter({
   history: createWebHistory(),
   routes,

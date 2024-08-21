@@ -58,14 +58,22 @@ export default {
     const loginFailed = ref(false);
     const router = useRouter();
 
+    /**
+     * Toggles the visibility of the password field.
+     */
     const togglePasswordVisibility = () => {
       passwordVisible.value = !passwordVisible.value;
     };
 
+    /**
+     * Handles the login process.
+     * Validates the input fields, sends the login request, and handles the response.
+     */
     const handleLogin = async () => {
       errors.value = { username: '', password: '' };
       loginFailed.value = false;
 
+      // Validate username and password fields
       if (!username.value) {
         errors.value.username = 'Username is required';
         return;
@@ -79,6 +87,7 @@ export default {
       loading.value = true;
 
       try {
+        // Send login request to the API
         const response = await fetch('https://fakestoreapi.com/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -88,8 +97,9 @@ export default {
         const result = await response.json();
 
         if (response.ok) {
+          // Store JWT token in local storage and update login state
           localStorage.setItem('jwt', result.token);
-          isLoggedIn.value = true; // Update login state
+          isLoggedIn.value = true;
           // Redirect to the home page or previous page
           router.push('/');
         } else {
