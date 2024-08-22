@@ -127,3 +127,5 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 DEPLOY LINK 
 https://swiftclothesapp.netlify.app/
 >>>>>>> ce5f85487ed7e711a2145bc35e96afc5cbb522e0
+PRESENTATION VIDEO
+https://youtu.be/vDDdmG9t8O8
